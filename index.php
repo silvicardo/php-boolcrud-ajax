@@ -6,10 +6,43 @@
 
   <div class="jumbotron">
 
+    <table class="table">
+      <thead>
 
+      </thead>
+      <tbody>
+
+
+      </tbody>
+    </table>
 
   </div>
 </div>
+
+    <script id="guests-th" type="text/x-handlebars-template">
+
+            <th>{{ cat }}</th>
+
+    </script>
+
+
+    <script id="guest-row" type="text/x-handlebars-template">
+
+          <tr>
+            {{{ tds }}}
+            <td>
+              <a class="btn btn-success btn_show" href="http://localhost/FEBBRAIO/php-boolcrud/guests/show.php?id={{{id}}}">Detail</a>
+            </td>
+
+            <td>
+              <a class="btn btn-warning btn_edit"href="http://localhost/FEBBRAIO/php-boolcrud/guests/update.php?id={{{id}}}">Edit</a>
+            </td>
+            <td>
+                <button class="btn btn-danger btn_delete" data-id="{{{ id }}}">Delete</button>
+            </td>
+          </tr>
+
+    </script>
 
 
 <?php include 'template_parts/footer.php'; ?>
