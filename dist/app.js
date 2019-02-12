@@ -15269,28 +15269,60 @@ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"
 
 
 $(document).ready(function () {
-  var url = 'http://localhost/FEBBRAIO/php-boolcrud-ajax/guests/show.php';
-  $.getJSON(url, showGuests);
+  var baseUrl = "http://localhost/FEBBRAIO/php-boolcrud-ajax/"; //Al caricamento della pagina in base a dove ci si trova
 
-  function showGuests(guests) {
-    console.log(guests);
-    printGuestsTh(guests[0]);
+  if (currentPageIs('index.php')) {
+    loadAndShowGuests();
+  } else if (currentPageIs('edit.php')) {
+    console.log('edit page');
+  } else if (currentPageIs('new.php')) {
+    console.log('new page');
+  } else {
+    //siamo nella route principale /
+    loadAndShowGuests();
+  } //listeners
 
-    for (var i = 0; i < guests.length; i++) {
-      printGuestTr(guests[i]);
-    }
-  }
 
   $(document).on('click', '.btn_delete', function () {
     var id = $(this).attr('data-id');
-    console.log('cliccato');
-    console.log(id);
-    $.post('http://localhost/FEBBRAIO/php-boolcrud-ajax/guests/delete.php', {
+    $.post("".concat(baseUrl, "guests/delete.php"), {
       id: id
     }, function (response) {
-      console.log('successo');
+      console.log(response);
+
+      if (JSON.parse(response) === true) {
+        window.location.replace(baseUrl);
+      }
     });
-  });
+  }); //FUNZIONI
+
+  function loadAndShowGuests() {
+    var url = "".concat(baseUrl, "/guests/show.php");
+
+    if (searchFroParam('id') != '') {
+      url += "?id=".concat(searchFroParam('id'));
+    }
+
+    $.getJSON(url, showGuests);
+  }
+
+  function showGuests(guests) {
+    console.log(guests); //Titolo Pagina
+
+    $('.page_title').text(guests.length == 1 ? 'Single Guest Page' : 'Guests Page'); //Stampa il titolo dei valori dalla query
+
+    printGuestsTh(guests[0]); //Stampa le row di guest disponibili
+
+    for (var i = 0; i < guests.length; i++) {
+      printGuestTr(guests[i]);
+    } //Se abbiamo solo un guest richiesto per id simuliamo la show page
+    //rimuovendo il tasto show
+
+
+    if (guests.length == 1 && searchFroParam('id') != '') {
+      $('.btn_show').remove();
+    }
+  }
 
   function printGuestsTh(guest) {
     for (var cat in guest) {
@@ -15315,10 +15347,22 @@ $(document).ready(function () {
 
     var context = {
       tds: tds,
-      id: guest['id']
+      id: guest['id'],
+      editUrl: "".concat(baseUrl, "edit.php?id=").concat(guest['id']),
+      showUrl: "".concat(baseUrl, "index.php?id=").concat(guest['id'])
     };
     var html = template(context);
     $('.table tbody').append(html);
+  }
+
+  function currentPageIs(page) {
+    return window.location.pathname.split('/').some(function (str) {
+      return str.includes(page);
+    });
+  }
+
+  function searchFroParam(name) {
+    return (location.search.split(new RegExp('[?&]' + name + '='))[1] || '').split('&')[0];
   }
 });
 

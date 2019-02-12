@@ -2,7 +2,7 @@
 
 <div class="container">
 
-<h1 class="text-center mb-5">Guests</h1>
+<h1 class="page_title text-center mb-5"></h1>
 
   <div class="jumbotron">
 
@@ -31,11 +31,11 @@
           <tr>
             {{{ tds }}}
             <td>
-              <a class="btn btn-success btn_show" href="http://localhost/FEBBRAIO/php-boolcrud/guests/show.php?id={{{id}}}">Detail</a>
+              <a href="{{{showUrl}}}" class="btn btn-success btn_show">Detail</a>
             </td>
 
             <td>
-              <a class="btn btn-warning btn_edit"href="http://localhost/FEBBRAIO/php-boolcrud/guests/update.php?id={{{id}}}">Edit</a>
+              <a class="btn btn-warning btn_edit" href="{{{editUrl}}}">Edit</a>
             </td>
             <td>
                 <button class="btn btn-danger btn_delete" data-id="{{{ id }}}">Delete</button>
