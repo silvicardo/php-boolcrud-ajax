@@ -18,11 +18,11 @@ function getGuestById($id, $asJSON = false) {
 
 //CREATE
 
-function createNewGuestFrom($data) {
+function createNewGuestFrom($data, $asJSON = false) {
 
   $query = generateCreateQueryFrom('ospiti', $data);
 
-  return performChangesFrom($query);
+  return  ($asJSON) ? json_encode(performChangesFrom($query)) : performChangesFrom($query) ;
 
 }
 

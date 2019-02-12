@@ -15271,15 +15271,12 @@ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"
 $(document).ready(function () {
   var baseUrl = "http://localhost/FEBBRAIO/php-boolcrud-ajax/"; //Al caricamento della pagina in base a dove ci si trova
 
-  if (currentPageIs('index.php')) {
+  if (currentPageIs('index.php') || !currentPageIs('.php')) {
     loadAndShowGuests();
   } else if (currentPageIs('edit.php')) {
     console.log('edit page');
   } else if (currentPageIs('new.php')) {
-    console.log('new page');
-  } else {
-    //siamo nella route principale /
-    loadAndShowGuests();
+    $('#new-form').submit(manageNewGuestFormSubmit);
   } //listeners
 
 
@@ -15295,6 +15292,7 @@ $(document).ready(function () {
       }
     });
   }); //FUNZIONI
+  //index e show
 
   function loadAndShowGuests() {
     var url = "".concat(baseUrl, "/guests/show.php");
@@ -15353,7 +15351,33 @@ $(document).ready(function () {
     };
     var html = template(context);
     $('.table tbody').append(html);
-  }
+  } //new
+
+
+  function manageNewGuestFormSubmit(event) {
+    //non eseguire l'azione default del form
+    event.preventDefault(); //creo l'oggetto data dai value degli input del form
+
+    var data = {};
+    var inputs = $('#new-form .form-control');
+
+    for (var i = 0; i < inputs.length; i++) {
+      var key = $(inputs[i]).attr('name');
+      var value = $(inputs[i]).val();
+      data[key] = value;
+    }
+
+    console.log(data); //chiamata ajax per aggiunta nuovo ospite
+
+    $.post("".concat(baseUrl, "guests/add.php"), data, function (response) {
+      console.log(response);
+
+      if (JSON.parse(response) === true) {
+        window.location.replace(baseUrl);
+      }
+    });
+  } //generali
+
 
   function currentPageIs(page) {
     return window.location.pathname.split('/').some(function (str) {
